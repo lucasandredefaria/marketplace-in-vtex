@@ -17,12 +17,15 @@ import java.util.Date;
 public class Product implements Serializable {
 
     @Id
-    private ObjectId _id;
+    private String _id;
     private Long idLojista;
     private String nome;
     private String descricao;
     private Long idCategoriaSaraiva;
     private Long idMarcaSaraiva;
+    private Long idDepartamento;
+
+    @DBRef
     private SkuInserirRequestMessage Skus;
     private Date dateProcessing;
 

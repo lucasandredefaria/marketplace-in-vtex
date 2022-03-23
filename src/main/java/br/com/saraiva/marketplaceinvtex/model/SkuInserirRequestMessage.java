@@ -22,6 +22,8 @@ public class SkuInserirRequestMessage implements Serializable {
     private String skuSaraiva;
     private String ean;
     private String isbn;
+    private String releaseDate;
+    private String title;
     private BigDecimal precoDe;
     private BigDecimal precoPor;
     private int estoque;
@@ -30,5 +32,6 @@ public class SkuInserirRequestMessage implements Serializable {
     private String status;
     private List<CaracteristicaSku> caracteristicas;
     private List<Image> imagens;
+    private Date dateProcessing;
 
 }

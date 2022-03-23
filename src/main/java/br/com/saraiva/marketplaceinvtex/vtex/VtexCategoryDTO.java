@@ -1,15 +1,15 @@
 package br.com.saraiva.marketplaceinvtex.vtex;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class VtexCategoryDTO {
 
     private Long id;
+    private Long parentId;
     private String name;
-    private Long categoryId;
-    private Long brandId;
-    private boolean isActive;
-    private boolean isVisible;
+    private String title;
 
 }
