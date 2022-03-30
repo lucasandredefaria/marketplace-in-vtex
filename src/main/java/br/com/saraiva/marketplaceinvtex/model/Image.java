@@ -17,7 +17,9 @@ public class Image implements Serializable {
 
     @Id
     private ObjectId id;
+    private Long idVtex;
     private String urlInterna;
+    private String name;
     private boolean capa;
     private Date dateProcessing;
 

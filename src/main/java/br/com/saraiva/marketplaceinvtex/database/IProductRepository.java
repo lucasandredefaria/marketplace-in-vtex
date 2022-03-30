@@ -6,6 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface IProductRepository extends MongoRepository<Product, String> {
 
     Product findBy_id(String id);
+    Product findByRefId(Long id);
 
-    //Product findBySkuLojistaAndIsbn(String skuLojista, String Isbn);
 }

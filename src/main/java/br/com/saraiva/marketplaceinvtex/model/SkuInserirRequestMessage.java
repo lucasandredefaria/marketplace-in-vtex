@@ -17,7 +17,9 @@ import java.util.List;
 public class SkuInserirRequestMessage implements Serializable {
 
     @Id
-    private ObjectId id;
+    private ObjectId _id;
+    private Long idLojista;
+    private Long idVtex;
     private String skuLojista;
     private String skuSaraiva;
     private String ean;
@@ -28,7 +30,10 @@ public class SkuInserirRequestMessage implements Serializable {
     private BigDecimal precoPor;
     private int estoque;
     private String tipo;
-    private Double peso;
+    private BigDecimal peso;
+    private BigDecimal altura;
+    private BigDecimal cumprimento;
+    private BigDecimal largura;
     private String status;
     private List<CaracteristicaSku> caracteristicas;
     private List<Image> imagens;

@@ -53,6 +53,6 @@ public class RabbitMQListener {
         byte[] bytes = msg.getBody();
         Product product = objectMapper.readValue(bytes, Product.class);
         log.info("Recieved Message From RabbitMQ: {}", product);
-        productService.processingProduct(product);
+        productService.processingProductAndSku(product);
     }
 }

@@ -19,29 +19,29 @@ public class VtexService implements IVtexService {
     @Value("${vtex.endpoint.sku}")
     private String endpointSku;
 
+    @Value("${vtex.endpoint.eansku}")
+    private String endpointEanSku;
+
+    @Value("${vtex.endpoint.filesku}")
+    private String endpointFileSku;
+
+    @Value("${vtex.endpoint.stocksku}")
+    private String endpointStockSku;
+
+    @Value("${vtex.endpoint.pricesku}")
+    private String endpointPriceSku;
+
     @Value("${vtex.endpoint.updatesku}")
     private String endpointUpdateSku;
 
-    @Value("${vtex.endpoint.category}")
-    private String endpointCategory;
-
-    @Value("${vtex.endpoint.brand}")
-    private String endpointBrand;
-
-    @Value("${vtex.endpoint.removematch}")
-    private String endpointRemoveMatch;
-
-    @Value("${vtex.endpoint.forcematch}")
-    private String endpointForceMatch;
-
-    @Value("${vtex.endpoint.suggestion}")
-    private String endpointSuggestion;
-
-    @Value("${vtex.endpoint.deleteeanfromsku}")
-    private String endpointDeleteEanFromSku;
+    @Value("${vtex.endpoint.removefilesku}")
+    private String endpointRemoveFileSku;
 
     @Value("${vtex.endpoint.skurefid}")
     private String endpointSkuRefId;
+
+    @Value("${vtex.endpoint.productrefid}")
+    private String endpointFindProduct;
 
     @Value("${vtex.api.baseurl}")
     private String endpointBaseURL;
@@ -58,7 +58,6 @@ public class VtexService implements IVtexService {
     private static String VTEX_API_APP_KEY = "X-VTEX-API-AppKey";
     private static String VTEX_API_APP_TOKEN = "X-VTEX-API-AppToken";
     public static MediaType JSON = MediaType.get("application/json; charset=utf-8");
-
 
     @Override
     public Response createProduct(VtexProductDTO product) throws IOException {
@@ -80,14 +79,14 @@ public class VtexService implements IVtexService {
     }
 
     @Override
-    public Response updateProduct(VtexProductDTO product) throws IOException {
+    public Response createSku(VtexSkuDTO product) throws IOException {
         Gson gson = new Gson();
         String json = gson.toJson(product);
         log.info("JSON: " + json);
 
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
-                .url(endpointBaseURL + endpointProduct + "/" + product)
+                .url(endpointBaseURL + endpointSku)
                 .post(RequestBody.create(JSON, json))
                 .addHeader(ACCEPT, APP_JSON)
                 .addHeader(CONTENT_TYPE, APP_JSON)
@@ -99,62 +98,158 @@ public class VtexService implements IVtexService {
     }
 
     @Override
-    public VtexMatchResultDTO forceMatch(VtexSuggestionResultDTO suggestionResult) {
-        return null;
+    public Response createEanSku(String ean, Long idVtex) throws IOException {
+
+        String endpoint = endpointEanSku.replace("{skuId}", String.valueOf(idVtex))
+                                        .replace("{ean}", ean);
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(endpointBaseURL + endpoint)
+                .post(RequestBody.create(null, new byte[0]))
+                .addHeader(ACCEPT, APP_JSON)
+                .addHeader(CONTENT_TYPE, APP_JSON)
+                .addHeader(VTEX_API_APP_KEY, endpointKey)
+                .addHeader(VTEX_API_APP_TOKEN, endpointToken)
+                .build();
+
+        return client.newCall(request).execute();
     }
 
     @Override
-    public VtexSuggestionResultDTO getSuggestion(Long lojistaId, String refId) {
-        return null;
+    public Response createFileSku(VtexFileSkuDTO vtexFileSkuDTO, Long idVtex) throws IOException {
+
+        Gson gson = new Gson();
+        String json = gson.toJson(vtexFileSkuDTO);
+        log.info("JSON: " + json);
+
+        String endpoint = endpointFileSku.replace("{skuId}", String.valueOf(idVtex));
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(endpointBaseURL + endpoint)
+                .post(RequestBody.create(JSON, json))
+                .addHeader(ACCEPT, APP_JSON)
+                .addHeader(CONTENT_TYPE, APP_JSON)
+                .addHeader(VTEX_API_APP_KEY, endpointKey)
+                .addHeader(VTEX_API_APP_TOKEN, endpointToken)
+                .build();
+
+        return client.newCall(request).execute();
+
     }
 
     @Override
-    public boolean createSuggestion(VtexProductSuggestionDTO suggestion, Long lojistaId, String skuMarketplace) {
-        return false;
+    public Response sendStockSku(VtexStockSkuDTO vtexStockSkuDTO, Long idSku) throws IOException {
+        Gson gson = new Gson();
+        String json = gson.toJson(vtexStockSkuDTO);
+        log.info("JSON: " + json);
+
+        String endpoint = endpointStockSku.replace("{skuId}", String.valueOf(idSku))
+                .replace("{warehouseId}", "1");
+        //warehouseId Estoque Principal
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(endpointBaseURL + endpoint)
+                .put(RequestBody.create(JSON, json))
+                .addHeader(ACCEPT, APP_JSON)
+                .addHeader(CONTENT_TYPE, APP_JSON)
+                .addHeader(VTEX_API_APP_KEY, endpointKey)
+                .addHeader(VTEX_API_APP_TOKEN, endpointToken)
+                .build();
+
+        return client.newCall(request).execute();
     }
 
     @Override
-    public boolean removeSeller(VtexSkuDTO sku, String sellerId) {
-        return false;
+    public Response sendPriceSku(VtexPriceSkuDTO vtexpriceSkuDTO, Long idSku) throws IOException {
+        Gson gson = new Gson();
+        String json = gson.toJson(vtexpriceSkuDTO);
+        log.info("JSON: " + json);
+
+        String endpoint = endpointPriceSku.replace("{itemId}", String.valueOf(idSku));
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(endpointBaseURL + endpoint)
+                .put(RequestBody.create(JSON, json))
+                .addHeader(ACCEPT, APP_JSON)
+                .addHeader(CONTENT_TYPE, APP_JSON)
+                .addHeader(VTEX_API_APP_KEY, endpointKey)
+                .addHeader(VTEX_API_APP_TOKEN, endpointToken)
+                .build();
+
+        return client.newCall(request).execute();
     }
 
     @Override
-    public VtexProductDTO getProduct(Long productId) {
-        return null;
+    public Response getProduct(Long skuSaraiva) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(endpointBaseURL + endpointFindProduct + skuSaraiva)
+                .get()
+                .addHeader(ACCEPT, APP_JSON)
+                .addHeader(CONTENT_TYPE, APP_JSON)
+                .addHeader(VTEX_API_APP_KEY, endpointKey)
+                .addHeader(VTEX_API_APP_TOKEN, endpointToken)
+                .build();
+
+        return client.newCall(request).execute();
     }
 
     @Override
-    public Long getSkuByRef(String skuRef) {
-        return null;
+    public Response getSku(Long skuId) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(endpointBaseURL + endpointSkuRefId + skuId)
+                .get()
+                .addHeader(ACCEPT, APP_JSON)
+                .addHeader(CONTENT_TYPE, APP_JSON)
+                .addHeader(VTEX_API_APP_KEY, endpointKey)
+                .addHeader(VTEX_API_APP_TOKEN, endpointToken)
+                .build();
+
+        return client.newCall(request).execute();
     }
 
     @Override
-    public VtexSkuDTO getSku(Long skuId) {
-        return null;
+    public Response updateSku(VtexSkuDTO sku, Long IdSku) throws IOException {
+        Gson gson = new Gson();
+        String json = gson.toJson(sku);
+        log.info("JSON: " + json);
+
+        String endpoint = endpointUpdateSku.replace("{skuId}", String.valueOf(IdSku));
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(endpointBaseURL + endpoint)
+                .put(RequestBody.create(JSON, json))
+                .addHeader(ACCEPT, APP_JSON)
+                .addHeader(CONTENT_TYPE, APP_JSON)
+                .addHeader(VTEX_API_APP_KEY, endpointKey)
+                .addHeader(VTEX_API_APP_TOKEN, endpointToken)
+                .build();
+
+        return client.newCall(request).execute();
     }
 
     @Override
-    public boolean deleteEanFromSKU(VtexSkuDTO sku) {
-        return false;
+    public Response removeFileSku(Long idSkuVtex) throws IOException {
+
+        String endpoint = endpointRemoveFileSku.replace("{skuId}", String.valueOf(idSkuVtex));
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(endpointBaseURL + endpoint)
+                .delete()
+                .addHeader(ACCEPT, APP_JSON)
+                .addHeader(CONTENT_TYPE, APP_JSON)
+                .addHeader(VTEX_API_APP_KEY, endpointKey)
+                .addHeader(VTEX_API_APP_TOKEN, endpointToken)
+                .build();
+
+        return client.newCall(request).execute();
     }
 
-    @Override
-    public boolean updateSku(VtexSkuDTO sku) {
-        return false;
-    }
-
-    @Override
-    public VtexBrandDTO getBrand(Long brandId) {
-        return null;
-    }
-
-    @Override
-    public VtexCategoryDTO getCategory(Long categoryId) {
-        return null;
-    }
-
-    @Override
-    public String getCategoryFullPath(Long categoryId) {
-        return null;
-    }
 }

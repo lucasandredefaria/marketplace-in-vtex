@@ -6,7 +6,6 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -18,12 +17,12 @@ public class Product implements Serializable {
 
     @Id
     private String _id;
-    private Long idLojista;
+    private Long idVtex;
     private String nome;
     private String descricao;
     private Long idCategoriaSaraiva;
     private Long idMarcaSaraiva;
-    private Long idDepartamento;
+    private Long refId;
 
     @DBRef
     private SkuInserirRequestMessage Skus;

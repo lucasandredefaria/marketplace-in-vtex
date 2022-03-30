@@ -6,5 +6,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface ISkuRepository extends MongoRepository<SkuInserirRequestMessage, String> {
 
-        //Product findBy_id(String id);
+        SkuInserirRequestMessage findBy_id(String id);
+        SkuInserirRequestMessage findByIdVtex(Long id);
+        SkuInserirRequestMessage findBySkuSaraivaAndIdLojista(String skuSaraiva, Long idLojista);
 }
